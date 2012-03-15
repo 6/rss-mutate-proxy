@@ -10,17 +10,8 @@ get '/' do
 end
 
 get '/mutate' do
-  halt 400, "No feed URL specified" if params[:feed].nil? and params[:twitter].nil?
-  content = nil
-  begin
-    params[:feed] = "https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=#{params[:twitter]}" unless params[:twitter].nil?
-    params[:feed] = "http://#{params[:feed]}" unless /^[^:]+:\/\//.match params[:feed]
-    open(params[:feed]){|s| content = s.read}
-  rescue
-    halt 400, "Invalid feed URL: #{params[:feed]}"
-  end
-  rss = RSS::Parser.parse(content, false)
-  halt 400, "Invalid RSS content" if rss.nil?
+  rss = get_rss params[:feed], params[:twitter]  
+  halt 400, "Invalid URL or RSS content" if rss.nil?
 
   builder do |xml|
     xml.instruct! :xml, :version => '1.0'
@@ -45,6 +36,18 @@ get '/mutate' do
         end
       end
     end
+  end
+end
+
+def get_rss(url, twitter)
+  url = "https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=#{twitter}" unless twitter.nil?
+  url "http://#{url}" unless /^[^:]+:\/\//.match url
+  content = nil
+  begin
+    open(url){|s| content = s.read}
+    RSS::Parser.parse(content, false)
+  rescue
+    nil
   end
 end
 
