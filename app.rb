@@ -62,10 +62,12 @@ end
 
 __END__
 @@ index
+<style>input[type='text']{width:200px}</style>
 %form{:method => "get", :action => "/mutate"}
   %input{:type => "text", :name => "feed", :placeholder => "RSS URL"}
-  %p or
+  or
   %input{:type => "text", :name => "twitter", :placeholder => "Twitter handle"}
-  %p Optional:
+  %hr
+  %p{:style => "font-weight:bold"} OPTIONAL
   %input{:type => "text", :name => "zone", :placeholder => "UTC offset (e.g. -5)"}
   %input{:type => "submit"}
