@@ -1,3 +1,4 @@
+require 'active_support/time'
 require 'builder'
 require 'open-uri'
 require 'rss/1.0'
@@ -29,12 +30,11 @@ get '/mutate' do
         xml.link rss.channel.link
 
         rss.items.each do |item|
-          #TODO alter item here
           xml.item do
             xml.title item.title
             xml.description item.description
             xml.link item.link unless item.link.nil?
-            xml.pubDate item.date unless item.date.nil?
+            xml.pubDate change_time_zone(item.date, params[:zone]) unless item.date.nil?
           end
         end
       end
@@ -42,8 +42,19 @@ get '/mutate' do
   end
 end
 
+def change_time_zone(time, new_zone)
+  return time if new_zone.nil?
+  begin
+    time.in_time_zone(new_zone.to_i)
+  rescue
+    time
+  end
+end
+
 __END__
 @@ index
 %form{:method => "get", :action => "/mutate"}
   %input{:type => "text", :name => "feed", :placeholder => "RSS URL"}
+  %p Optional:
+  %input{:type => "text", :name => "zone", :placeholder => "UTC offset (e.g. -5)"}
   %input{:type => "submit"}
