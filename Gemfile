@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'builder'
+gem 'haml'
 gem 'sinatra'
 gem 'unicorn'
 
