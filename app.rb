@@ -10,9 +10,10 @@ get '/' do
 end
 
 get '/mutate' do
-  halt 400, "No feed URL specified" if params[:feed].nil?
+  halt 400, "No feed URL specified" if params[:feed].nil? and params[:twitter].nil?
   content = nil
   begin
+    params[:feed] = "https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=#{params[:twitter]}" unless params[:twitter].nil?
     params[:feed] = "http://#{params[:feed]}" unless /^[^:]+:\/\//.match params[:feed]
     open(params[:feed]){|s| content = s.read}
   rescue
@@ -58,6 +59,8 @@ __END__
 @@ index
 %form{:method => "get", :action => "/mutate"}
   %input{:type => "text", :name => "feed", :placeholder => "RSS URL"}
+  %p or
+  %input{:type => "text", :name => "twitter", :placeholder => "Twitter handle"}
   %p Optional:
   %input{:type => "text", :name => "zone", :placeholder => "UTC offset (e.g. -5)"}
   %input{:type => "submit"}
