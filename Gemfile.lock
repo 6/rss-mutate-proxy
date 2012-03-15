@@ -5,6 +5,8 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     addressable (2.2.7)
+    bing_translator (1.1.0)
+      nokogiri (~> 1.5.0)
     builder (3.0.0)
     foreman (0.40.0)
       term-ansicolor (~> 1.0.7)
@@ -22,6 +24,7 @@ GEM
     mime-types (1.17.2)
     multi_json (1.0.4)
     netrc (0.7.1)
+    nokogiri (1.5.2)
     rack (1.4.1)
     rack-protection (1.2.0)
       rack
@@ -47,6 +50,7 @@ PLATFORMS
 
 DEPENDENCIES
   activesupport
+  bing_translator
   builder
   foreman
   haml

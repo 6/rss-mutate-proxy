@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'activesupport'
+gem 'bing_translator'
 gem 'builder'
 gem 'haml'
 gem 'sinatra'

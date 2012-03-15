@@ -1,4 +1,5 @@
 require 'active_support/time'
+require 'bing_translator'
 require 'builder'
 require 'open-uri'
 require 'rss/1.0'
@@ -12,6 +13,7 @@ end
 get '/mutate' do
   rss = get_rss params[:feed], params[:twitter]
   halt 400, "Invalid URL or RSS content" if rss.nil?
+  translator = BingTranslator.new ENV['BING_APP_ID']
 
   builder do |xml|
     xml.instruct! :xml, :version => '1.0'
@@ -26,8 +28,9 @@ get '/mutate' do
         xml.ttl rss.channel.ttl unless rss.channel.ttl.nil?
 
         rss.items.each do |item|
+          title = translate(translator, item.title, params[:from_lang], params[:to_lang])
           xml.item do
-            xml.title item.title
+            xml.title title
             xml.description item.description
             xml.link item.link unless item.link.nil?
             xml.pubDate change_time_zone(item.date, params[:zone]) unless item.date.nil?
@@ -60,6 +63,12 @@ def change_time_zone(time, new_zone)
   end
 end
 
+def translate(translator, text, from, to)
+  return text if from.empty? or to.empty? or text.empty?
+  translated = translator.translate text, :from => from, :to => to
+  "#{text} => #{translated}"
+end
+
 __END__
 @@ index
 <style>input[type='text']{width:200px}</style>
@@ -70,4 +79,7 @@ __END__
   %hr
   %p{:style => "font-weight:bold"} OPTIONAL
   %input{:type => "text", :name => "zone", :placeholder => "UTC offset (e.g. -5)"}
+  %p
+    %input{:type => "text", :name => "from_lang", :placeholder => "Translate from (e.g. fr)"}
+    %input{:type => "text", :name => "to_lang", :placeholder => "Translate to (e.g. en)"}
   %input{:type => "submit"}
