@@ -40,8 +40,8 @@ get '/mutate' do
 end
 
 def get_rss(url, twitter)
-  url = "https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=#{twitter}" unless twitter.nil?
-  url "http://#{url}" unless /^[^:]+:\/\//.match url
+  url = "https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=#{twitter}" unless twitter.empty?
+  url = "http://#{url}" unless /^[^:]+:\/\//.match url
   content = nil
   begin
     open(url){|s| content = s.read}
