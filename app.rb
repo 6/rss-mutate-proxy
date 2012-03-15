@@ -36,6 +36,7 @@ get '/mutate' do
             xml.description item.description
             xml.link item.link unless item.link.nil?
             xml.pubDate change_time_zone(item.date, params[:zone]) unless item.date.nil?
+            xml.author item.author unless item.author.nil?
           end
         end
       end
