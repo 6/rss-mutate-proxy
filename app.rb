@@ -13,6 +13,7 @@ get '/mutate' do
   halt 400, "No feed URL specified" if params[:feed].nil?
   content = nil
   begin
+    params[:feed] = "http://#{params[:feed]}" unless /^[^:]+:\/\//.match params[:feed]
     open(params[:feed]){|s| content = s.read}
   rescue
     halt 400, "Invalid feed URL: #{params[:feed]}"
