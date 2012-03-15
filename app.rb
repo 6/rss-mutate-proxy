@@ -31,6 +31,8 @@ get '/mutate' do
         xml.link rss.channel.link
         xml.pubDate change_time_zone(rss.channel.date, params[:zone]) unless rss.channel.date.nil?
         xml.lastBuildDate change_time_zone(rss.channel.lastBuildDate, params[:zone]) unless rss.channel.lastBuildDate.nil?
+        xml.language rss.channel.language unless rss.channel.language.nil?
+        xml.ttl rss.channel.ttl unless rss.channel.ttl.nil?
 
         rss.items.each do |item|
           xml.item do
