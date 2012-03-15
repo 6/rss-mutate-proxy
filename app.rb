@@ -10,7 +10,7 @@ get '/' do
 end
 
 get '/mutate' do
-  rss = get_rss params[:feed], params[:twitter]  
+  rss = get_rss params[:feed], params[:twitter]
   halt 400, "Invalid URL or RSS content" if rss.nil?
 
   builder do |xml|
