@@ -52,7 +52,7 @@ def get_rss(url, twitter)
 end
 
 def change_time_zone(time, new_zone)
-  return time if new_zone.nil?
+  return time if new_zone.empty?
   begin
     time.in_time_zone(new_zone.to_i)
   rescue
