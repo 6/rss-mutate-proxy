@@ -1,6 +1,7 @@
 require 'active_support/time'
 require 'bing_translator'
 require 'builder'
+require 'json'
 require 'open-uri'
 require 'rss/1.0'
 require 'rss/2.0'
@@ -13,7 +14,7 @@ get '/' do
 end
 
 get '/mutate' do
-  rss = get_rss params[:feed], params[:twitter]
+  rss = get_rss params[:feed], params[:twitter], params[:facebook]
   halt 400, "Invalid URL or RSS content" if rss.nil?
   translator = BingTranslator.new ENV['BING_APP_ID']
 
@@ -44,13 +45,25 @@ get '/mutate' do
   end
 end
 
-def get_rss(url, twitter)
+def get_rss(url, twitter, facebook)
   url = "https://api.twitter.com/1/statuses/user_timeline.rss?screen_name=#{twitter}" unless twitter.empty?
+  url = facebook_feed_url facebook unless facebook.empty?
   url = "http://#{url}" unless /^[^:]+:\/\//.match url
   content = nil
   begin
     open(url, "User-Agent" => USER_AGENT){|s| content = s.read}
     RSS::Parser.parse(content, false)
+  rescue
+    nil
+  end
+end
+
+def facebook_feed_url(namespace)
+  begin
+    open("http://graph.facebook.com/#{namespace}", "User-Agent" => USER_AGENT){|s|
+      info = JSON.parse(s.read)
+      "https://www.facebook.com/feeds/page.php?id=#{info['id']}&format=rss20"
+    }
   rescue
     nil
   end
@@ -79,6 +92,8 @@ __END__
   %input{:type => "text", :name => "feed", :placeholder => "RSS URL"}
   or
   %input{:type => "text", :name => "twitter", :placeholder => "Twitter handle"}
+  or
+  %input{:type => "text", :name => "facebook", :placeholder => "Facebook Page namespace or ID"}
   %hr
   %p{:style => "font-weight:bold"} Modifications (optional)
   %input{:type => "text", :name => "zone", :placeholder => "UTC offset (e.g. -5)"}
