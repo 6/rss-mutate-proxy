@@ -80,7 +80,7 @@ __END__
   or
   %input{:type => "text", :name => "twitter", :placeholder => "Twitter handle"}
   %hr
-  %p{:style => "font-weight:bold"} OPTIONAL
+  %p{:style => "font-weight:bold"} Modifications (optional)
   %input{:type => "text", :name => "zone", :placeholder => "UTC offset (e.g. -5)"}
   %p
     %input{:type => "text", :name => "from_lang", :placeholder => "Translate from (e.g. fr)"}
