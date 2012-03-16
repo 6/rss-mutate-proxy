@@ -59,7 +59,7 @@ end
 def change_time_zone(time, new_zone)
   return time if new_zone.empty?
   begin
-    time.in_time_zone(new_zone.to_i)
+    time.in_time_zone(new_zone.to_i).strftime("%a, %d %b %Y %H:%M:%S %z")
   rescue
     time
   end
