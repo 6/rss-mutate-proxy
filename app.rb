@@ -71,6 +71,7 @@ end
 
 __END__
 @@ index
+%title RSS mutate
 <style>input[type='text']{width:200px}</style>
 %form{:method => "get", :action => "/mutate"}
   %input{:type => "text", :name => "feed", :placeholder => "RSS URL"}
