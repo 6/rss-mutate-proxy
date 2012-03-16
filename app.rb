@@ -6,6 +6,8 @@ require 'rss/1.0'
 require 'rss/2.0'
 require 'sinatra'
 
+USER_AGENT = "Mozilla/5.0 (compatible; RSSmutate/0.1; +http://github.com/6/rss-mutate-proxy)"
+
 get '/' do
   haml :index
 end
@@ -47,7 +49,7 @@ def get_rss(url, twitter)
   url = "http://#{url}" unless /^[^:]+:\/\//.match url
   content = nil
   begin
-    open(url){|s| content = s.read}
+    open(url, "User-Agent" => USER_AGENT){|s| content = s.read}
     RSS::Parser.parse(content, false)
   rescue
     nil
