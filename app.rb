@@ -32,6 +32,7 @@ get '/mutate' do
 
         rss.items.each do |item|
           title = translate(translator, item.title, params[:from_lang], params[:to_lang])
+          next if blacklisted?(title, params[:title_blacklist])
           xml.item do
             xml.title title
             xml.description item.description
@@ -84,6 +85,13 @@ def translate(translator, text, from, to)
   "#{text} => #{translated}"
 end
 
+def blacklisted?(title, blacklist)
+  blacklist.split(",").each{|w|
+    return true if /\b#{Regexp.quote w}\b/.match title.downcase
+  }
+  false
+end
+
 __END__
 @@ index
 %title RSS mutate
@@ -100,4 +108,7 @@ __END__
   %p
     %input{:type => "text", :name => "from_lang", :placeholder => "Translate from (e.g. fr)"}
     %input{:type => "text", :name => "to_lang", :placeholder => "Translate to (e.g. en)"}
+  %p{:style => "font-weight:bold"} Filters (optional)
+  %p
+    %input{:type => "text", :name => "title_blacklist", :placeholder => "Title blacklist words (e.g. ipad,css3)"}
   %input{:type => "submit"}
