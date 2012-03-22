@@ -97,6 +97,8 @@ __END__
 %title RSS mutate
 <style>input[type='text']{width:200px}</style>
 %form{:method => "get", :action => "/mutate"}
+  %small Enter one
+  %br
   %input{:type => "text", :name => "feed", :placeholder => "RSS URL"}
   or
   %input{:type => "text", :name => "twitter", :placeholder => "Twitter handle"}
@@ -104,11 +106,17 @@ __END__
   %input{:type => "text", :name => "facebook", :placeholder => "Facebook Page namespace or ID"}
   %hr
   %p{:style => "font-weight:bold"} Modifications (optional)
+  %small Convert time zones
+  %br
   %input{:type => "text", :name => "zone", :placeholder => "UTC offset (e.g. -5)"}
   %p
+    %small Translate titles
+    %br
     %input{:type => "text", :name => "from_lang", :placeholder => "Translate from (e.g. fr)"}
     %input{:type => "text", :name => "to_lang", :placeholder => "Translate to (e.g. en)"}
   %p{:style => "font-weight:bold"} Filters (optional)
   %p
-    %input{:type => "text", :name => "title_blacklist", :placeholder => "Title blacklist words (e.g. ipad,css3)"}
+    %small Title blacklist keywords
+    %br
+    %input{:type => "text", :name => "title_blacklist", :placeholder => "Comma-separated (e.g. ipad,css3)"}
   %input{:type => "submit"}
